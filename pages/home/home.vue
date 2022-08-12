@@ -1,5 +1,10 @@
 <template>
   <view>
+    <!-- 使用自定义的搜索组件 -->
+    <view class="search-box">
+      <my-search @click="gotoSearch"></my-search>
+    </view>
+
     <!-- 轮播图区域 -->
     <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" circular>
       <swiper-item v-for="(item,i) in swiperList" :key="i">
@@ -31,7 +36,8 @@
           </navigator>
           <!-- 右侧 4 个小图片的盒子 -->
           <view class="right-img-box">
-            <navigator class="right-img-item" v-for="(item2,i2) in item.product_list" :key="i2" v-if="i2 !== 0" :url="item2.url">
+            <navigator class="right-img-item" v-for="(item2,i2) in item.product_list" :key="i2" v-if="i2 !== 0"
+              :url="item2.url">
               <image :src="item2.image_src" :style="{width:item2.image_width+'rpx'}" mode="widthFix"></image>
             </navigator>
           </view>
@@ -110,6 +116,11 @@
         })
 
         this.floorList = res.message
+      },
+      gotoSearch() {
+        uni.navigateTo({
+          url: '/subpkg/search/search'
+        })
       }
     }
   }
@@ -151,5 +162,14 @@
   .floor-img-box {
     display: flex;
     padding-left: 10rpx;
+  }
+
+  .search-box {
+    // 设置定位效果为“吸顶”(使用粘性布局)
+    position: sticky;
+    // 吸顶的“位置”
+    top: 0;
+    // 提高层级，防止被轮播图覆盖
+    z-index: 999;
   }
 </style>
