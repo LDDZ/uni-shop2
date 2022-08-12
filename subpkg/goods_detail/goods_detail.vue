@@ -37,7 +37,36 @@
 </template>
 
 <script>
+  // 从 vuex 中按需导入 mapState, mapMutations，mapGetters   辅助方法
+  import {
+    mapState,
+    mapMutations,
+    mapGetters
+  } from 'vuex'
+
   export default {
+    computed: {
+      // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
+      // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
+      ...mapState('m_cart', ['cart']),
+      ...mapGetters('m_cart', ['total'])
+    },
+    watch: {
+      // 定义 total 侦听器，指向一个配置对象
+      total: {
+        // handler 属性用来定义侦听器的 function 处理函数
+        handler(newVal) {
+          // 通过数组的 find() 方法，找到购物车按钮的配置对象
+          const findResult = this.options.find(x => x.text === '购物车')
+          if (findResult) {
+            // 动态为购物车按钮的 info 属性赋值
+            findResult.info = newVal
+          }
+        },
+        // immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用
+        immediate: true
+      }
+    },
     data() {
       return {
         // 商品详情对象
@@ -48,7 +77,7 @@
         }, {
           icon: 'cart',
           text: '购物车',
-          info: 2
+          info: 0
         }],
         buttonGroup: [{
             text: '加入购物车',
@@ -69,6 +98,8 @@
       this.getGoodsDetatil(goods_id)
     },
     methods: {
+      // 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
+      ...mapMutations('m_cart', ['addToCart']),
       async getGoodsDetatil(goods_id) {
         const {
           data: res
@@ -99,7 +130,24 @@
             url: '/pages/cart/cart'
           })
         }
-      }
+      },
+      buttonClick(e) {
+        // 判断是否点击了 加入购物车 按钮
+        if (e.content.text === '加入购物车') {
+          // 组织一个商品的信息对象
+          // { goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state }
+          const goods = {
+            goods_id: this.goods_info.goods_id,
+            goods_name: this.goods_info.goods_name,
+            goods_price: this.goods_info.goods_price,
+            goods_count: 1,
+            goods_small_logo: this.goods_info.goods_small_logo,
+            goods_state: true
+          }
+          // 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
+          this.addToCart(goods)
+        }
+      },
     }
   }
 </script>
