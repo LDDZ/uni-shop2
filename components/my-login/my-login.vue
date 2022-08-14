@@ -97,6 +97,7 @@
 
 <style lang="scss">
   .login-container {
+    // 登录盒子的样式
     height: 750rpx;
     background-color: #f8f8f8;
     display: flex;
@@ -106,6 +107,7 @@
     position: relative;
     overflow: hidden;
 
+    // 绘制登录盒子底部的半椭圆造型
     &::after {
       content: ' ';
       display: block;
@@ -119,6 +121,7 @@
       transform: translateY(50%);
     }
 
+    // 登录按钮的样式
     .btn-login {
       width: 90%;
       border-radius: 100px;
@@ -126,6 +129,7 @@
       background-color: #c00000;
     }
 
+    // 按钮下方提示消息的样式
     .tips-text {
       font-size: 12px;
       color: gray;
